@@ -1,0 +1,831 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Let Us Crochet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --gold: #d4af37;
+      --gold-dark: #b08c24;
+      --hot-pink: #ff2f92;
+      --card-bg: #f8f8f8;
+      --border: #e0e0e0;
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      --radius: 14px;
+      --transition: 0.15s ease-in-out;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 960px;
+      background: var(--bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 24px 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffe9a6, var(--gold));
+      position: relative;
+      box-shadow: 0 0 0 2px #00000010;
+    }
+
+    .logo::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      border-style: dashed;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--hot-pink);
+      border-top-color: transparent;
+      border-right-color: transparent;
+      top: 6px;
+      left: 6px;
+      opacity: 0.9;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title-block h1 {
+      font-size: 1.6rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .title-block p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .home-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      background: var(--gold);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform var(--transition), box-shadow var(--transition), outline var(--transition), background var(--transition);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+      outline: 2px solid var(--hot-pink);
+      outline-offset: 2px;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow);
+      background: var(--gold-dark);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      outline: 2px solid var(--hot-pink);
+      outline-offset: 2px;
+      box-shadow: var(--shadow);
+    }
+
+    .section {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section.active {
+      display: flex;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .section-header h2 {
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .section-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 14px 14px 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .card-header h3 {
+      font-size: 1rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="url"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font: inherit;
+      background: #ffffff;
+      transition: border var(--transition), box-shadow var(--transition);
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--hot-pink);
+      box-shadow: 0 0 0 2px #ff2f9230;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .project-meta {
+      font-size: 0.8rem;
+      color: #555;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .meta-pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+    }
+
+    .project-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .empty-state {
+      font-size: 0.9rem;
+      color: #777;
+      font-style: italic;
+    }
+
+    .counter-display {
+      font-size: 2.4rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .counter-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+
+    .notes-area {
+      width: 100%;
+    }
+
+    footer {
+      font-size: 0.75rem;
+      color: #777;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .app {
+        padding: 16px 14px 20px;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+
+      .title-block h1 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo" aria-hidden="true"></div>
+      <div class="title-block">
+        <h1>Let Us Crochet</h1>
+        <p>Your cozy space to track rows, projects, and notes.</p>
+      </div>
+    </header>
+
+    <main>
+      <!-- HOME SECTION -->
+      <section id="home" class="section active">
+        <div class="section-body">
+          <div class="card">
+            <p style="margin-bottom:10px;font-size:0.95rem;">
+              Choose where you’d like to go:
+            </p>
+            <div class="home-buttons">
+              <button class="btn" data-nav="projects">
+                🧺 Projects
+              </button>
+              <button class="btn" data-nav="tracker">
+                🔢 Row &amp; Stitch Tracker
+              </button>
+              <button class="btn" data-nav="notes">
+                📝 Notes
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS SECTION -->
+      <section id="projects" class="section">
+        <div class="section-header">
+          <h2>Projects</h2>
+          <button class="btn-secondary btn" data-nav="home">← Back Home</button>
+        </div>
+        <div class="section-body">
+          <div class="card">
+            <div class="card-header">
+              <h3>Add or Edit Project</h3>
+            </div>
+            <form id="project-form">
+              <input type="hidden" id="project-id" />
+              <div class="field-row">
+                <div>
+                  <label for="project-name">Project name</label>
+                  <input type="text" id="project-name" required placeholder="Granny square blanket" />
+                </div>
+                <div>
+                  <label for="project-yarn">Yarn</label>
+                  <input type="text" id="project-yarn" placeholder="Cotton, DK, etc." />
+                </div>
+              </div>
+              <div class="field-row" style="margin-top:8px;">
+                <div>
+                  <label for="project-hook">Hook size</label>
+                  <input type="text" id="project-hook" placeholder="4.0 mm" />
+                </div>
+                <div>
+                  <label for="project-pattern">Pattern link</label>
+                  <input type="url" id="project-pattern" placeholder="https://..." />
+                </div>
+              </div>
+              <div style="margin-top:8px;">
+                <label for="project-notes">Project notes</label>
+                <textarea id="project-notes" placeholder="Any special stitches, repeats, or adjustments..."></textarea>
+              </div>
+              <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="submit" class="btn">💾 Save project</button>
+                <button type="button" id="project-reset" class="btn-secondary btn">Clear form</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Your projects</h3>
+              <span class="badge" id="project-count-badge">0 saved</span>
+            </div>
+            <div id="projects-list" class="projects-list">
+              <p class="empty-state">No projects yet. Add your first one above.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRACKER SECTION -->
+      <section id="tracker" class="section">
+        <div class="section-header">
+          <h2>Row &amp; Stitch Tracker</h2>
+          <button class="btn-secondary btn" data-nav="home">← Back Home</button>
+        </div>
+        <div class="section-body">
+          <div class="card">
+            <div class="card-header">
+              <h3>Row counter</h3>
+              <span class="badge">
+                Current project:
+                <span id="tracker-project-label">None selected</span>
+              </span>
+            </div>
+            <div class="counter-display" id="row-count">0</div>
+            <div class="counter-controls">
+              <button class="btn" id="row-decrease">− 1</button>
+              <button class="btn" id="row-increase">+ 1</button>
+              <button class="btn-secondary btn" id="row-reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Stitches &amp; notes</h3>
+            </div>
+            <div class="field-row">
+              <div>
+                <label for="stitch-count">Stitches this row</label>
+                <input type="number" id="stitch-count" min="0" placeholder="e.g. 24" />
+              </div>
+              <div>
+                <label for="tracker-row-notes">Row notes</label>
+                <input type="text" id="tracker-row-notes" placeholder="e.g. Increase every 3rd stitch" />
+              </div>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn" id="tracker-save-row">Save row info</button>
+              <button class="btn-secondary btn" id="tracker-clear-row">Clear row fields</button>
+            </div>
+            <p style="margin-top:8px;font-size:0.85rem;color:#555;">
+              Row details are saved with the current row number so you can come back to them later.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- NOTES SECTION -->
+      <section id="notes" class="section">
+        <div class="section-header">
+          <h2>Notes</h2>
+          <button class="btn-secondary btn" data-nav="home">← Back Home</button>
+        </div>
+        <div class="section-body">
+          <div class="card">
+            <div class="card-header">
+              <h3>Side notes</h3>
+              <span class="badge">Auto-saved locally</span>
+            </div>
+            <textarea id="notes-text" class="notes-area" placeholder="Write anything you want to remember: yarn substitutions, ideas, measurements, gift lists..."></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Saved in your browser only · Let Us Crochet
+    </footer>
+  </div>
+
+  <script>
+    // ---------- NAVIGATION ----------
+    const sections = document.querySelectorAll(".section");
+    const navButtons = document.querySelectorAll("[data-nav]");
+
+    function showSection(id) {
+      sections.forEach(sec => {
+        sec.classList.toggle("active", sec.id === id);
+      });
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-nav");
+        showSection(target);
+      });
+    });
+
+    // ---------- PROJECTS ----------
+    const PROJECTS_KEY = "letuscrochet_projects";
+    const CURRENT_PROJECT_KEY = "letuscrochet_current_project";
+
+    const projectForm = document.getElementById("project-form");
+    const projectIdInput = document.getElementById("project-id");
+    const projectNameInput = document.getElementById("project-name");
+    const projectYarnInput = document.getElementById("project-yarn");
+    const projectHookInput = document.getElementById("project-hook");
+    const projectPatternInput = document.getElementById("project-pattern");
+    const projectNotesInput = document.getElementById("project-notes");
+    const projectResetBtn = document.getElementById("project-reset");
+    const projectsListEl = document.getElementById("projects-list");
+    const projectCountBadge = document.getElementById("project-count-badge");
+    const trackerProjectLabel = document.getElementById("tracker-project-label");
+
+    function loadProjects() {
+      try {
+        return JSON.parse(localStorage.getItem(PROJECTS_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveProjects(projects) {
+      localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
+    }
+
+    function getCurrentProjectId() {
+      return localStorage.getItem(CURRENT_PROJECT_KEY) || "";
+    }
+
+    function setCurrentProjectId(id) {
+      if (id) {
+        localStorage.setItem(CURRENT_PROJECT_KEY, id);
+      } else {
+        localStorage.removeItem(CURRENT_PROJECT_KEY);
+      }
+      updateTrackerProjectLabel();
+    }
+
+    function updateTrackerProjectLabel() {
+      const id = getCurrentProjectId();
+      const projects = loadProjects();
+      const project = projects.find(p => p.id === id);
+      trackerProjectLabel.textContent = project ? project.name : "None selected";
+    }
+
+    function renderProjects() {
+      const projects = loadProjects();
+      projectsListEl.innerHTML = "";
+
+      if (!projects.length) {
+        const p = document.createElement("p");
+        p.className = "empty-state";
+        p.textContent = "No projects yet. Add your first one above.";
+        projectsListEl.appendChild(p);
+      } else {
+        projects.forEach(project => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          const header = document.createElement("div");
+          header.className = "card-header";
+
+          const title = document.createElement("h3");
+          title.textContent = project.name || "Untitled project";
+
+          const metaRow = document.createElement("div");
+          metaRow.className = "project-meta";
+
+          if (project.yarn) {
+            const pill = document.createElement("span");
+            pill.className = "meta-pill";
+            pill.textContent = `Yarn: ${project.yarn}`;
+            metaRow.appendChild(pill);
+          }
+
+          if (project.hook) {
+            const pill = document.createElement("span");
+            pill.className = "meta-pill";
+            pill.textContent = `Hook: ${project.hook}`;
+            metaRow.appendChild(pill);
+          }
+
+          header.appendChild(title);
+          card.appendChild(header);
+          card.appendChild(metaRow);
+
+          if (project.pattern) {
+            const link = document.createElement("a");
+            link.href = project.pattern;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.style.display = "inline-block";
+            link.style.marginTop = "6px";
+            link.style.fontSize = "0.85rem";
+            link.style.color = "#000";
+            link.textContent = "Open pattern ↗";
+            card.appendChild(link);
+          }
+
+          if (project.notes) {
+            const notes = document.createElement("p");
+            notes.style.marginTop = "6px";
+            notes.style.fontSize = "0.85rem";
+            notes.textContent = project.notes;
+            card.appendChild(notes);
+          }
+
+          const actions = document.createElement("div");
+          actions.className = "project-actions";
+
+          const openTrackerBtn = document.createElement("button");
+          openTrackerBtn.className = "btn";
+          openTrackerBtn.type = "button";
+          openTrackerBtn.textContent = "Use tracker";
+          openTrackerBtn.addEventListener("click", () => {
+            setCurrentProjectId(project.id);
+            showSection("tracker");
+          });
+
+          const editBtn = document.createElement("button");
+          editBtn.className = "btn-secondary btn";
+          editBtn.type = "button";
+          editBtn.textContent = "Edit";
+          editBtn.addEventListener("click", () => {
+            projectIdInput.value = project.id;
+            projectNameInput.value = project.name || "";
+            projectYarnInput.value = project.yarn || "";
+            projectHookInput.value = project.hook || "";
+            projectPatternInput.value = project.pattern || "";
+            projectNotesInput.value = project.notes || "";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.className = "btn-secondary btn";
+          deleteBtn.type = "button";
+          deleteBtn.textContent = "Delete";
+          deleteBtn.addEventListener("click", () => {
+            const confirmed = confirm("Delete this project?");
+            if (!confirmed) return;
+            const updated = loadProjects().filter(p => p.id !== project.id);
+            saveProjects(updated);
+            if (getCurrentProjectId() === project.id) {
+              setCurrentProjectId("");
+            }
+            renderProjects();
+          });
+
+          actions.appendChild(openTrackerBtn);
+          actions.appendChild(editBtn);
+          actions.appendChild(deleteBtn);
+          card.appendChild(actions);
+
+          projectsListEl.appendChild(card);
+        });
+      }
+
+      projectCountBadge.textContent = `${projects.length} saved`;
+      updateTrackerProjectLabel();
+    }
+
+    projectForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const id = projectIdInput.value || crypto.randomUUID();
+      const projects = loadProjects();
+      const existingIndex = projects.findIndex(p => p.id === id);
+
+      const projectData = {
+        id,
+        name: projectNameInput.value.trim(),
+        yarn: projectYarnInput.value.trim(),
+        hook: projectHookInput.value.trim(),
+        pattern: projectPatternInput.value.trim(),
+        notes: projectNotesInput.value.trim()
+      };
+
+      if (existingIndex >= 0) {
+        projects[existingIndex] = projectData;
+      } else {
+        projects.push(projectData);
+      }
+
+      saveProjects(projects);
+      projectForm.reset();
+      projectIdInput.value = "";
+      renderProjects();
+    });
+
+    projectResetBtn.addEventListener("click", () => {
+      projectForm.reset();
+      projectIdInput.value = "";
+    });
+
+    // ---------- TRACKER ----------
+    const ROW_KEY = "letuscrochet_row";
+    const STITCH_KEY = "letuscrochet_stitch";
+    const ROW_NOTES_KEY = "letuscrochet_row_notes";
+
+    const rowCountEl = document.getElementById("row-count");
+    const rowIncreaseBtn = document.getElementById("row-increase");
+    const rowDecreaseBtn = document.getElementById("row-decrease");
+    const rowResetBtn = document.getElementById("row-reset");
+    const stitchCountInput = document.getElementById("stitch-count");
+    const trackerRowNotesInput = document.getElementById("tracker-row-notes");
+    const trackerSaveRowBtn = document.getElementById("tracker-save-row");
+    const trackerClearRowBtn = document.getElementById("tracker-clear-row");
+
+    function loadRow() {
+      const value = parseInt(localStorage.getItem(ROW_KEY), 10);
+      return Number.isFinite(value) && value >= 0 ? value : 0;
+    }
+
+    function saveRow(value) {
+      localStorage.setItem(ROW_KEY, String(value));
+    }
+
+    function updateRowDisplay() {
+      rowCountEl.textContent = loadRow();
+    }
+
+    rowIncreaseBtn.addEventListener("click", () => {
+      const current = loadRow();
+      const next = current + 1;
+      saveRow(next);
+      updateRowDisplay();
+    });
+
+    rowDecreaseBtn.addEventListener("click", () => {
+      const current = loadRow();
+      const next = Math.max(0, current - 1);
+      saveRow(next);
+      updateRowDisplay();
+    });
+
+    rowResetBtn.addEventListener("click", () => {
+      const confirmed = confirm("Reset row counter to 0?");
+      if (!confirmed) return;
+      saveRow(0);
+      updateRowDisplay();
+    });
+
+    function loadStitch() {
+      const value = parseInt(localStorage.getItem(STITCH_KEY), 10);
+      return Number.isFinite(value) && value >= 0 ? value : "";
+    }
+
+    function saveStitch(value) {
+      if (value === "" || value === null) {
+        localStorage.removeItem(STITCH_KEY);
+      } else {
+        localStorage.setItem(STITCH_KEY, String(value));
+      }
+    }
+
+    function loadRowNotes() {
+      return localStorage.getItem(ROW_NOTES_KEY) || "";
+    }
+
+    function saveRowNotes(value) {
+      if (!value) {
+        localStorage.removeItem(ROW_NOTES_KEY);
+      } else {
+        localStorage.setItem(ROW_NOTES_KEY, value);
+      }
+    }
+
+    function syncRowFieldsFromStorage() {
+      stitchCountInput.value = loadStitch();
+      trackerRowNotesInput.value = loadRowNotes();
+    }
+
+    trackerSaveRowBtn.addEventListener("click", () => {
+      const stitchVal = stitchCountInput.value;
+      const notesVal = trackerRowNotesInput.value.trim();
+      saveStitch(stitchVal === "" ? "" : Number(stitchVal));
+      saveRowNotes(notesVal);
+      alert("Row details saved.");
+    });
+
+    trackerClearRowBtn.addEventListener("click", () => {
+      stitchCountInput.value = "";
+      trackerRowNotesInput.value = "";
+    });
+
+    // ---------- NOTES ----------
+    const NOTES_KEY = "letuscrochet_notes";
+    const notesText = document.getElementById("notes-text");
+
+    function loadNotes() {
+      return localStorage.getItem(NOTES_KEY) || "";
+    }
+
+    function saveNotes(value) {
+      localStorage.setItem(NOTES_KEY, value);
+    }
+
+    notesText.addEventListener("input", () => {
+      saveNotes(notesText.value);
+    });
+
+    // ---------- INITIAL LOAD ----------
+    function init() {
+      renderProjects();
+      updateRowDisplay();
+      syncRowFieldsFromStorage();
+      notesText.value = loadNotes();
+    }
+
+    init();
+  </script>
+</body>
+</html>
